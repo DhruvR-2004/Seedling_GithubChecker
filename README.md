@@ -4,7 +4,7 @@ I built IssuePilot because I wanted a faster way to understand what is happening
 
 You can try the live demo here: https://seedling-githubchecker.onrender.com/
 The home screen looks like this:
-   
+https://github.com/DhruvR-2004/Seedling_GithubChecker/blob/7411e5edf597b5ed9259fb2d4fa854dec942181d/demo.png   
 
 
 What it actually does
