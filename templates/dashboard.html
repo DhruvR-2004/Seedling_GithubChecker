@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>IssuePilot: {{ repo_name }} #{{ issue_number }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="header">
+        <div style="font-weight: 800; font-size: 18px; margin-right: 20px; color: var(--text-main);">
+            <i class="fas fa-rocket" style="color: #58a6ff;"></i> IssuePilot
+        </div>
+        <i class="fab fa-github" style="font-size: 20px; color: var(--text-muted);"></i>
+        <span style="color: var(--blue);">{{ repo_name }}</span>
+        <span style="color: var(--text-muted);">/</span>
+        <span>Issue #{{ issue_number }}</span>
+    </div>
+
+    <div class="main-content">
+        <div class="sidebar">
+            <div style="padding: 10px; font-weight: bold; border-bottom: 1px solid var(--border); margin-bottom: 5px;">
+                Issues List
+            </div>
+
+            <div class="issues-container">
+                {% for issue in issues_list %}
+                <a href="/analyze?repo_url={{ repo_url }}&issue_number={{ issue.number }}&page={{ page }}"
+                    class="issue-item {% if issue.number == issue_number %}selected{% endif %}"
+                    style="text-decoration: none;">
+
+                    {% if issue.state == 'open' %}
+                    <i class="far fa-dot-circle" style="color: #238636; margin-right: 8px;"></i>
+                    {% else %}
+                    <i class="far fa-check-circle" style="color: #8957e5; margin-right: 8px;"></i>
+                    {% endif %}
+
+                    <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <div style="font-weight: 600;">{{ issue.title }}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">#{{ issue.number }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="pagination">
+                {% if page > 1 %}
+                <a href="/analyze?repo_url={{ repo_url }}&issue_number={{ issue_number }}&page={{ page - 1 }}"
+                    class="page-btn">
+                    <i class="fas fa-chevron-left"></i> Prev
+                </a>
+                {% else %}
+                <span class="page-btn disabled"><i class="fas fa-chevron-left"></i> Prev</span>
+                {% endif %}
+
+                <span style="font-size: 12px; font-weight: bold;">Page {{ page }}</span>
+
+                <a href="/analyze?repo_url={{ repo_url }}&issue_number={{ issue_number }}&page={{ page + 1 }}"
+                    class="page-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="analysis-panel">
+            <h2 style="margin-top: 0;">{{ issue_title }} <span style="color: var(--text-muted);">#{{ issue_number
+                    }}</span></h2>
+
+            <div class="card">
+                <h3 style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0;">
+                    <i class="fas fa-robot" style="color: #a371f7;"></i> AI Summary
+                </h3>
+                <p style="font-size: 16px; line-height: 1.5;">{{ analysis.summary }}</p>
+
+                <div style="margin-top: 20px; display: flex; gap: 20px;">
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-muted);">TYPE</div>
+                        <div style="font-weight: bold; text-transform: capitalize;">{{ analysis.type }}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-muted);">PRIORITY</div>
+                        <div class="{{ 'priority-high' if analysis.priority_score|int >= 4 else 'priority-low' }}"
+                            style="font-weight: bold;">
+                            {{ analysis.priority_score }}/5
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">SUGGESTED LABELS</div>
+                    {% for label in analysis.suggested_labels %}
+                    <span class="tag {{ 'bug' if 'bug' in label else 'feature' }}">{{ label }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <h4 style="margin-top: 0; color: var(--text-muted);">Potential Impact</h4>
+                <p>{{ analysis.potential_impact }}</p>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 12px; color: var(--text-muted);">
+                Debug Raw JSON:
+                <div class="json-block">{{ analysis }}</div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
