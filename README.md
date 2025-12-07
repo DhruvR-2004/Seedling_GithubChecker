@@ -3,6 +3,9 @@ IssuePilot AI
 I built IssuePilot because I wanted a faster way to understand what is happening in GitHub issue threads without reading every single comment. It is basically an AI assistant that acts like a product manager for your code repositories.
 
 You can try the live demo here: https://seedling-githubchecker.onrender.com/
+The home screen looks like this:
+   
+
 
 What it actually does
 
